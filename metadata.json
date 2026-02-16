@@ -1,0 +1,5 @@
+{
+  "name": "Fund_Manager",
+  "description": "A comprehensive year-wise financial tracking system for fund collections and expenses with secure admin access and public reporting.",
+  "requestFramePermissions": []
+}
