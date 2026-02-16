@@ -4,6 +4,8 @@
     { "source": "/api/admin/update-password", "destination": "/api/index" },
     { "source": "/api/data", "destination": "/api/index" },
     { "source": "/api/entries", "destination": "/api/index" },
-    { "source": "/api/entries/:id", "destination": "/api/index" }
+    { "source": "/api/entries/:id", "destination": "/api/index" },
+    { "source": "/api/verify-collection-key", "destination": "/api/index" },
+    { "source": "/api/admin/update-collection-key", "destination": "/api/index" }
   ]
 }

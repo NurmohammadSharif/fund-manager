@@ -7,7 +7,6 @@ const STORAGE_KEYS = {
 };
 
 export const storageService = {
-  // NEW: Login via Backend
   login: async (username: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
       const response = await fetch(`${API_BASE}/login`, {
@@ -22,7 +21,20 @@ export const storageService = {
     }
   },
 
-  // NEW: Update Password via Backend
+  // Verify the collection ledger passkey
+  verifyCollectionKey: async (key: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const response = await fetch(`${API_BASE}/verify-collection-key`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key })
+      });
+      return await response.json();
+    } catch (err) {
+      return { success: false, error: "Verification server unavailable" };
+    }
+  },
+
   updateAdminPassword: async (currentPassword: string, newPassword: string): Promise<{ success: boolean; error?: string }> => {
     try {
       const response = await fetch(`${API_BASE}/admin/update-password`, {
@@ -33,6 +45,20 @@ export const storageService = {
       return await response.json();
     } catch (err) {
       return { success: false, error: "Failed to update password" };
+    }
+  },
+
+  // Change the key used to unlock collection details
+  updateCollectionKey: async (adminPassword: string, newCollectionKey: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const response = await fetch(`${API_BASE}/admin/update-collection-key`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminPassword, newCollectionKey })
+      });
+      return await response.json();
+    } catch (err) {
+      return { success: false, error: "Failed to update collection key" };
     }
   },
 

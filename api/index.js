@@ -18,7 +18,7 @@ const client = new MongoClient(uri, {
     },
 });
 
-let db, entriesColl, yearsColl, adminColl, initialized = false;
+let db, entriesColl, yearsColl, adminColl, configColl, initialized = false;
 
 async function connectDB() {
     if (initialized) return;
@@ -27,6 +27,7 @@ async function connectDB() {
     entriesColl = db.collection("entries");
     yearsColl = db.collection("years");
     adminColl = db.collection("admin");
+    configColl = db.collection("config");
 
     const adminCount = await adminColl.countDocuments();
     if (adminCount === 0) {
@@ -34,6 +35,15 @@ async function connectDB() {
             username: "admin",
             password: "admin123",
             createdAt: new Date().toISOString(),
+        });
+    }
+
+    const config = await configColl.findOne({ key: 'collection_access' });
+    if (!config) {
+        await configColl.insertOne({
+            key: 'collection_access',
+            value: 'donor123',
+            updatedAt: new Date().toISOString()
         });
     }
 
@@ -108,6 +118,30 @@ app.delete("/entries/:id", async (req, res) => {
     } catch (err) {
         console.error("Delete Error:", err);
         res.status(500).json({ error: "Failed to delete entry" });
+    }
+});
+
+app.post('/verify-collection-key', async (req, res) => {
+    const { key } = req.body;
+    const config = await configColl.findOne({ key: 'collection_access', value: key });
+    if (config) {
+        res.json({ success: true });
+    } else {
+        res.status(401).json({ success: false, error: "Invalid passkey" });
+    }
+});
+
+app.post('/admin/update-collection-key', async (req, res) => {
+    const { adminPassword, newCollectionKey } = req.body;
+    const admin = await adminColl.findOne({ password: adminPassword });
+    if (admin) {
+        await configColl.updateOne(
+            { key: 'collection_access' },
+            { $set: { value: newCollectionKey, updatedAt: new Date().toISOString() } }
+        );
+        res.json({ success: true });
+    } else {
+        res.status(401).json({ success: false, error: "Admin verification failed" });
     }
 });
 
