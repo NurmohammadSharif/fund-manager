@@ -1,6 +1,6 @@
 import { Entry, YearRecord } from '../types';
 
-const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3001/api' : '/api';
+const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : '/api';
 
 const STORAGE_KEYS = {
   AUTH: 'fundmanager_auth'

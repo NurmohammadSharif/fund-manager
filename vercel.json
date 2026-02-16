@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    { "source": "/api/login", "destination": "/api/index" },
+    { "source": "/api/admin/update-password", "destination": "/api/index" },
+    { "source": "/api/data", "destination": "/api/index" },
+    { "source": "/api/entries", "destination": "/api/index" },
+    { "source": "/api/entries/:id", "destination": "/api/index" }
+  ]
+}
